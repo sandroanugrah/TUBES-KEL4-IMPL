@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { FaHome, FaRestroom, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { IoBed } from "react-icons/io5";
 import { RiAdminFill, RiSettings4Fill } from "react-icons/ri";
+// Hooks
+import useKeluarAkun from "@/hooks/useKeluarAkun";
 
 function Sidebar({ pengarah }) {
   const [pengaturanTerbuka, setPengaturanTerbuka] = useState(false);
+  const { keluar, memuat } = useKeluarAkun();
 
   const togglePengaturan = () => {
     setPengaturanTerbuka(!pengaturanTerbuka);
@@ -44,7 +47,6 @@ function Sidebar({ pengarah }) {
             Data Penghuni
           </li>
 
-          {/* Pengaturan */}
           <li
             className="flex items-center justify-between mb-4 cursor-pointer hover:bg-gray-700 p-2 rounded"
             onClick={togglePengaturan}
@@ -66,10 +68,10 @@ function Sidebar({ pengarah }) {
               </li>
               <li
                 className="flex items-center gap-3 mb-2 cursor-pointer hover:bg-gray-700 p-2 rounded"
-                onClick={() => pengarah.push("/keluar")}
+                onClick={keluar}
               >
                 <FaSignOutAlt className="text-lg" />
-                Keluar
+                {memuat ? "Keluar..." : "Keluar"}{" "}
               </li>
             </ul>
           )}

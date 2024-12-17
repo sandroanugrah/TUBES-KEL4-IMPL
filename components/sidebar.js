@@ -61,7 +61,7 @@ function Sidebar({ pengarah }) {
             <ul className="ml-6">
               <li
                 className="flex items-center gap-3 mb-2 cursor-pointer hover:bg-gray-700 p-2 rounded"
-                onClick={() => pengarah.push("/profil")}
+                onClick={() => pengarah.push("/dataProfil")}
               >
                 <FaUserCircle className="text-lg" />
                 Profil

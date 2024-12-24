@@ -20,28 +20,28 @@ function Sidebar({ pengarah }) {
         <ul>
           <li
             className="flex items-center gap-3 mb-4 cursor-pointer hover:bg-gray-700 p-2 rounded"
-            onClick={() => pengarah.push("/beranda")}
+            onClick={() => pengarah.push("/admin/beranda")}
           >
             <FaHome className="text-xl" />
             Beranda
           </li>
           <li
             className="flex items-center gap-3 mb-4 cursor-pointer hover:bg-gray-700 p-2 rounded"
-            onClick={() => pengarah.push("/dataAdmin")}
+            onClick={() => pengarah.push("/admin/dataAdmin")}
           >
             <RiAdminFill className="text-xl" />
             Data Admin
           </li>
           <li
             className="flex items-center gap-3 mb-4 cursor-pointer hover:bg-gray-700 p-2 rounded"
-            onClick={() => pengarah.push("/dataKamar")}
+            onClick={() => pengarah.push("/admin/dataKamar")}
           >
             <IoBed className="text-xl" />
             Data Kamar
           </li>
           <li
             className="flex items-center gap-3 mb-4 cursor-pointer hover:bg-gray-700 p-2 rounded"
-            onClick={() => pengarah.push("/dataPenghuni")}
+            onClick={() => pengarah.push("/admin/dataPenghuni")}
           >
             <FaRestroom className="text-xl" />
             Data Penghuni
@@ -61,7 +61,7 @@ function Sidebar({ pengarah }) {
             <ul className="ml-6">
               <li
                 className="flex items-center gap-3 mb-2 cursor-pointer hover:bg-gray-700 p-2 rounded"
-                onClick={() => pengarah.push("/dataProfil")}
+                onClick={() => pengarah.push("/admin/dataProfil")}
               >
                 <FaUserCircle className="text-lg" />
                 Profil

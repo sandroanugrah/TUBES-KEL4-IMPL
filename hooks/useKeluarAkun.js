@@ -19,7 +19,7 @@ const useKeluarAkun = () => {
       localStorage.clear();
 
       toast.success("Anda telah keluar dari akun.");
-      router.push("/");
+      router.push("/admin");
     } catch (error) {
       toast.error("Terjadi kesalahan saat keluar: " + error.message);
     } finally {

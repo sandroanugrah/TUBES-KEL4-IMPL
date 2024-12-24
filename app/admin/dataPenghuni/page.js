@@ -5,9 +5,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // Komponen
 import Sidebar from "@/components/sidebar";
-import Konten from "@/app/dataKamar/components/konten";
+import Konten from "@/app/admin/dataPenghuni/components/konten";
 
-const DataKamar = () => {
+const DataPenghuni = () => {
   const pengarah = useRouter();
 
   return (
@@ -21,4 +21,4 @@ const DataKamar = () => {
   );
 };
 
-export default DataKamar;
+export default DataPenghuni;

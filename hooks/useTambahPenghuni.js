@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  updateDoc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { toast } from "react-toastify";
 // PERPUSTAKAAN KAMI
 import { database } from "@/lib/firebaseConfig";
@@ -13,7 +20,7 @@ const useTambahPenghuni = () => {
   const [sedangMemuatTambahPenghuni, setSedangMemuatTambahPenghuni] =
     useState(false);
 
-  const validasiFormulir = () => {
+  const validasiFormulir = async () => {
     let sesuai = true;
     let pesanKesalahan = "";
 
@@ -33,28 +40,56 @@ const useTambahPenghuni = () => {
 
     if (!sesuai) {
       toast.error(pesanKesalahan.trim());
+      return false;
     }
 
-    return sesuai;
+    try {
+      const referensiKamar = doc(database, "kamar", kamar);
+      const snapshot = await getDoc(referensiKamar);
+
+      if (!snapshot.exists()) {
+        toast.error("Kamar tidak ditemukan.");
+        return false;
+      }
+
+      const dataKamar = snapshot.data();
+      if (dataKamar.Status !== "Tersedia") {
+        toast.error("Kamar sudah terisi. Pilih kamar lain.");
+        return false;
+      }
+    } catch (error) {
+      toast.error("Terjadi kesalahan saat memvalidasi kamar: " + error.message);
+      return false;
+    }
+
+    return true;
   };
 
   const tambahPenghuni = async () => {
-    if (!validasiFormulir()) return;
+    const validasi = await validasiFormulir();
+    if (!validasi) return;
 
     setSedangMemuatTambahPenghuni(true);
 
     try {
+      // Tambahkan data penghuni ke koleksi "penghuni"
       const referensiPenghuni = collection(database, "penghuni");
       const dataPenghuni = {
         Nama: nama,
         Jenis_Kelamin: jenisKelamin,
-        Kamar: kamar,
+        ID_Kamar: kamar, // Relasi ke ID kamar
         No_Telepon: noTelepon,
         Alamat: alamat,
         Tanggal_Pembuatan: serverTimestamp(),
       };
-
       await setDoc(doc(referensiPenghuni), dataPenghuni);
+
+      // Perbarui status kamar menjadi "Terisi"
+      const referensiKamar = doc(database, "kamar", kamar);
+      await updateDoc(referensiKamar, {
+        Status: "Terisi",
+      });
+
       toast.success("Penghuni berhasil ditambahkan!");
       aturUlangFormulir();
     } catch (error) {

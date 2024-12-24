@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // Komponen
+import Konten from "@/app/admin/dataAdmin/components/konten";
 import Sidebar from "@/components/sidebar";
-import Konten from "@/app/dataProfil/components/konten";
 
-const DataProfil = () => {
+const Admin = () => {
   const pengarah = useRouter();
 
   return (
@@ -21,4 +21,4 @@ const DataProfil = () => {
   );
 };
 
-export default DataProfil;
+export default Admin;

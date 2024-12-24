@@ -36,7 +36,7 @@ const useMasukDenganEmailKataSandi = () => {
       if (kredentialsAdmin.user) {
         localStorage.setItem("ID_Admin", kredentialsAdmin.user.uid);
         toast.success("Berhasil masuk!");
-        pengarah.push("/beranda");
+        pengarah.push("/admin/beranda");
       }
     } catch (error) {
       if (error.code === "auth/user-not-found") {

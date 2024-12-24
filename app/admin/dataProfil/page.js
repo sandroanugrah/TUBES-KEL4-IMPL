@@ -5,9 +5,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // Komponen
 import Sidebar from "@/components/sidebar";
-import Konten from "@/app/dataPenghuni/components/konten";
+import Konten from "@/app/admin/dataProfil/components/konten";
 
-const DataPenghuni = () => {
+const DataProfil = () => {
   const pengarah = useRouter();
 
   return (
@@ -21,4 +21,4 @@ const DataPenghuni = () => {
   );
 };
 
-export default DataPenghuni;
+export default DataProfil;

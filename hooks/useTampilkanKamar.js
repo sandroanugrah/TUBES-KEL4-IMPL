@@ -1,7 +1,8 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { toast } from "react-toastify";
-// PERPUSTAKAAN KAMI
 import { database } from "@/lib/firebaseConfig";
 
 const useTampilkanKamar = () => {

@@ -16,7 +16,7 @@ import {
 // Komponen
 import ModalTambahKamar from "@/components/modalTambahKamar";
 import Memuat from "@/components/memuat";
-import ModalKonfirmasiHapusKamar from "@/components/modalKonfimasiKamar";
+import ModalKonfirmasiHapusKamar from "@/components/modalKonfimasiHapusKamar";
 
 // Pengait Hooks
 import useTampilkanKamar from "@/hooks/useTampilkanKamar";

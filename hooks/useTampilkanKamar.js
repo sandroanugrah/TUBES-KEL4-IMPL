@@ -1,7 +1,5 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { database } from "@/lib/firebaseConfig";
 
@@ -13,9 +11,14 @@ const useTampilkanKamar = () => {
 
   const ambilDaftarKamar = async () => {
     const referensiKamar = collection(database, "kamar");
+    const queryKamar = query(
+      referensiKamar,
+      orderBy("Tanggal_Pembuatan_Kamar", "asc")
+    );
+
     try {
       setSedangMemuatTampilkanKamar(true);
-      const snapshot = await getDocs(referensiKamar);
+      const snapshot = await getDocs(queryKamar);
 
       const kamars = snapshot.docs.map((docSnapshot) => ({
         id: docSnapshot.id,

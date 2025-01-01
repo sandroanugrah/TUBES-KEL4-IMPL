@@ -1,15 +1,7 @@
 import { useState } from "react";
-import {
-  collection,
-  doc,
-  getDoc,
-  updateDoc,
-  setDoc,
-  serverTimestamp,
-} from "firebase/firestore";
-import { toast } from "react-toastify";
-// PERPUSTAKAAN KAMI
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { database } from "@/lib/firebaseConfig";
+import { toast } from "react-toastify";
 
 const useTambahPenghuni = () => {
   const [nama, setNama] = useState("");
@@ -20,93 +12,45 @@ const useTambahPenghuni = () => {
   const [sedangMemuatTambahPenghuni, setSedangMemuatTambahPenghuni] =
     useState(false);
 
-  const validasiFormulir = async () => {
-    let sesuai = true;
-    let pesanKesalahan = "";
-
-    !nama ? ((sesuai = false), (pesanKesalahan += "Nama harus diisi. ")) : null;
-    !jenisKelamin
-      ? ((sesuai = false), (pesanKesalahan += "Jenis kelamin harus dipilih. "))
-      : null;
-    !kamar
-      ? ((sesuai = false), (pesanKesalahan += "Kamar harus diisi. "))
-      : null;
-    !noTelepon
-      ? ((sesuai = false), (pesanKesalahan += "No Telepon harus diisi. "))
-      : null;
-    !alamat
-      ? ((sesuai = false), (pesanKesalahan += "Alamat harus diisi. "))
-      : null;
-
-    if (!sesuai) {
-      toast.error(pesanKesalahan.trim());
-      return false;
-    }
-
+  const tambahPenghuni = async () => {
+    setSedangMemuatTambahPenghuni(true);
     try {
       const referensiKamar = doc(database, "kamar", kamar);
       const snapshot = await getDoc(referensiKamar);
 
       if (!snapshot.exists()) {
-        toast.error("Kamar tidak ditemukan.");
-        return false;
+        toast.error(`Kamar dengan ID ${kamar} tidak ditemukan.`);
+        setSedangMemuatTambahPenghuni(false);
+        return;
       }
 
       const dataKamar = snapshot.data();
-      if (dataKamar.Status !== "Tersedia") {
-        toast.error("Kamar sudah terisi. Pilih kamar lain.");
-        return false;
+      const noPintu = dataKamar.No_Pintu;
+
+      if (dataKamar.Status !== "Kosong") {
+        toast.error(`Kamar ${noPintu} sudah terisi. Pilih kamar lain.`);
+        setSedangMemuatTambahPenghuni(false);
+        return;
       }
-    } catch (error) {
-      toast.error("Terjadi kesalahan saat memvalidasi kamar: " + error.message);
-      return false;
-    }
 
-    return true;
-  };
-
-  const tambahPenghuni = async () => {
-    const validasi = await validasiFormulir();
-    if (!validasi) return;
-
-    setSedangMemuatTambahPenghuni(true);
-
-    try {
-      // Tambahkan data penghuni ke koleksi "penghuni"
-      const referensiPenghuni = collection(database, "penghuni");
-      const dataPenghuni = {
+      const referensiPenghuni = doc(database, "penghuni", nama + "_" + kamar);
+      await setDoc(referensiPenghuni, {
         Nama: nama,
         Jenis_Kelamin: jenisKelamin,
-        ID_Kamar: kamar, // Relasi ke ID kamar
         No_Telepon: noTelepon,
         Alamat: alamat,
-        Tanggal_Pembuatan: serverTimestamp(),
-      };
-      await setDoc(doc(referensiPenghuni), dataPenghuni);
-
-      // Perbarui status kamar menjadi "Terisi"
-      const referensiKamar = doc(database, "kamar", kamar);
-      await updateDoc(referensiKamar, {
-        Status: "Terisi",
+        Kamar_ID: kamar,
+        No_Pintu: noPintu,
       });
 
-      toast.success("Penghuni berhasil ditambahkan!");
-      aturUlangFormulir();
+      await setDoc(referensiKamar, { Status: "Terisi" }, { merge: true });
+
+      toast.success(`Penghuni ${nama} berhasil ditambahkan.`);
     } catch (error) {
-      toast.error(
-        "Terjadi kesalahan saat menambahkan penghuni: " + error.message
-      );
+      toast.error("Terjadi kesalahan: " + error.message);
     } finally {
       setSedangMemuatTambahPenghuni(false);
     }
-  };
-
-  const aturUlangFormulir = () => {
-    setNama("");
-    setJenisKelamin("");
-    setKamar("");
-    setNoTelepon("");
-    setAlamat("");
   };
 
   return {
@@ -121,7 +65,6 @@ const useTambahPenghuni = () => {
     setNoTelepon,
     setAlamat,
     tambahPenghuni,
-    aturUlangFormulir,
     sedangMemuatTambahPenghuni,
   };
 };

@@ -97,7 +97,6 @@ function KontenAdmin() {
             </thead>
             <tbody>
               {daftarAdmin.length === 0 ? (
-                // Jika data kosong, tampilkan pesan di dalam tabel
                 <tr>
                   <td colSpan={8} className="text-center text-gray-500 p-4">
                     <Typography variant="h6" color="red">
@@ -106,7 +105,6 @@ function KontenAdmin() {
                   </td>
                 </tr>
               ) : (
-                // Jika data tersedia, render baris data admin
                 daftarAdmin.map((admin, index) => (
                   <tr key={admin.id}>
                     <td className="p-4 border-b border-blue-gray-50">
@@ -132,9 +130,6 @@ function KontenAdmin() {
                     </td>
                     <td className="p-4 border-b border-blue-gray-50">
                       <div className="flex items-center gap-3">
-                        <Button variant="outlined" size="sm" color="blue">
-                          <FaEdit className="h-4 w-4" />
-                        </Button>
                         <Button
                           variant="outlined"
                           size="sm"

@@ -24,7 +24,7 @@ const Page = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="flex-1 flex flex-col backdrop-blur-sm">
+      <div className="flex-1 flex flex-col backdrop-blur-lg">
         <header className="flex justify-between items-center p-4 border-b border-[#8e44ad] bg-black/50">
           <p className="mx-auto text-[#f1c40f] text-xl font-bold">
             Alizar Kost
@@ -40,7 +40,7 @@ const Page = () => {
               {daftarKamar.filter((kamar) => kamar.Status === "Terisi").length}
             </div>
             <div className="bg-[#58d68d] p-4 rounded-xl flex items-center justify-center">
-              Kamar Kosong:{" "}
+              Kamar Tersedia:{" "}
               {daftarKamar.filter((kamar) => kamar.Status !== "Terisi").length}
             </div>
           </div>

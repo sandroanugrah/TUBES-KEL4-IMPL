@@ -9,11 +9,14 @@ import {
   Tooltip,
   Button,
 } from "@material-tailwind/react";
+// Components
 import ModalTambahPenghuni from "@/components/modalTambahPenghuni";
 import ModalKonfirmasiHapusPenghuni from "@/components/modalKonfirmasiHapusPenghuni";
+import ModalSuntingPenghuni from "@/components/modalSuntingPenghuni";
 // Pengait Hooks
 import useTampilkanPenghuni from "@/hooks/useTampilkanPenghuni";
 import useHapusPenghuni from "@/hooks/useHapusPenghuni";
+import useSuntingPenghuni from "@/hooks/useSuntingPenghuni";
 
 const judul_tabel = [
   "Nama Penghuni",
@@ -27,22 +30,36 @@ const judul_tabel = [
 const KontenPenghuni = () => {
   const [openModalTambah, setOpenModalTambah] = useState(false);
   const [bukaModalHapusPenghuni, setBukaModalHapusPenghuni] = useState(false);
+  const [bukaModalSuntingPenghuni, setBukaModalSuntingPenghuni] =
+    useState(false);
   const [penghuniYangTerpilih, setPenghuniYangTerpilih] = useState(null);
   const { sedangMemuatHapusPenghuni, hapusPenghuni } = useHapusPenghuni();
   const { daftarPenghuni, sedangMemuatTampilkanPenghuni } =
     useTampilkanPenghuni();
+  const { suntingPenghuni, sedangMemuatSuntingPenghuni } =
+    useSuntingPenghuni(penghuniYangTerpilih);
 
-  const tanganiHapus = (idPenghuni) => {
+  const tanganiHapus = (idPenghuni, kamarId) => {
     setPenghuniYangTerpilih(idPenghuni);
     setBukaModalHapusPenghuni(true);
   };
 
   const hapus = async () => {
     if (penghuniYangTerpilih) {
-      await hapusPenghuni(penghuniYangTerpilih);
+      const penghuni = daftarPenghuni.find(
+        (item) => item.id === penghuniYangTerpilih
+      );
+      if (penghuni && penghuni.Kamar_ID) {
+        await hapusPenghuni(penghuniYangTerpilih, penghuni.Kamar_ID);
+      }
       setBukaModalHapusPenghuni(false);
       setPenghuniYangTerpilih(null);
     }
+  };
+
+  const tanganiSunting = (penghuni) => {
+    setPenghuniYangTerpilih(penghuni);
+    setBukaModalSuntingPenghuni(true);
   };
 
   return (
@@ -109,7 +126,7 @@ const KontenPenghuni = () => {
                   </td>
                   <td className="p-4">
                     <Typography variant="small" color="blue-gray">
-                      {penghuni.Kamar}
+                      {penghuni.No_Pintu}
                     </Typography>
                   </td>
                   <td className="p-4">
@@ -124,7 +141,11 @@ const KontenPenghuni = () => {
                   </td>
                   <td className="p-4 flex gap-2">
                     <Tooltip content="Edit">
-                      <IconButton variant="text" color="blue">
+                      <IconButton
+                        variant="text"
+                        color="blue"
+                        onClick={() => tanganiSunting(penghuni.id)}
+                      >
                         <PencilIcon className="h-5 w-5" />
                       </IconButton>
                     </Tooltip>
@@ -132,7 +153,9 @@ const KontenPenghuni = () => {
                       <IconButton
                         variant="text"
                         color="red"
-                        onClick={() => tanganiHapus(penghuni.id)}
+                        onClick={() =>
+                          tanganiHapus(penghuni.id, penghuni.Kamar_ID)
+                        }
                       >
                         <FaTrashAlt className="h-5 w-5" />
                       </IconButton>
@@ -148,6 +171,13 @@ const KontenPenghuni = () => {
       <ModalTambahPenghuni
         open={openModalTambah}
         setOpen={setOpenModalTambah}
+      />
+      <ModalSuntingPenghuni
+        terbuka={bukaModalSuntingPenghuni}
+        tertutup={setBukaModalSuntingPenghuni}
+        penghuniYangTerpilih={penghuniYangTerpilih}
+        suntingPenghuni={suntingPenghuni}
+        sedangMemuatSuntingPenghuni={sedangMemuatSuntingPenghuni}
       />
 
       <ModalKonfirmasiHapusPenghuni

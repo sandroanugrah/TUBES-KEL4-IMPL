@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+
+import React from "react";
 import {
   Button,
   Dialog,
@@ -7,11 +8,14 @@ import {
   DialogBody,
   DialogFooter,
   Textarea,
+  Select,
+  Option,
+  Input,
 } from "@material-tailwind/react";
-import { Select, Option, Input } from "@material-tailwind/react";
 
 // PENGAIT KAMI
 import useTambahPenghuni from "@/hooks/useTambahPenghuni";
+import useTampilkanKamar from "@/hooks/useTampilkanKamar";
 
 const ModalTambahPenghuni = ({ open, setOpen }) => {
   const {
@@ -29,17 +33,18 @@ const ModalTambahPenghuni = ({ open, setOpen }) => {
     sedangMemuatTambahPenghuni,
   } = useTambahPenghuni();
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const { daftarKamar, sedangMemuatTampilkanKamar } = useTampilkanKamar();
+
+  // Filter kamar yang kosong (misalnya kamar yang tidak memiliki penghuni)
+  const kamarKosong = daftarKamar.filter((k) => k.Status === "Kosong");
 
   const handleSubmit = async () => {
     await tambahPenghuni();
-    handleClose();
+    setOpen(false);
   };
 
   return (
-    <Dialog open={open} handler={handleClose} className="max-w-md">
+    <Dialog open={open} handler={() => setOpen(false)} className="max-w-md">
       <DialogHeader>Tambah Penghuni Baru</DialogHeader>
       <DialogBody>
         <div className="space-y-4">
@@ -49,7 +54,7 @@ const ModalTambahPenghuni = ({ open, setOpen }) => {
               value={nama}
               label="Nama Penghuni"
               onChange={(e) => setNama(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              className="w-full"
               placeholder="Masukkan nama penghuni"
             />
           </div>
@@ -57,29 +62,44 @@ const ModalTambahPenghuni = ({ open, setOpen }) => {
             <Select
               label="Pilih jenis kelamin"
               value={jenisKelamin}
-              onChange={(e) => setJenisKelamin(e)}
+              onChange={(value) => setJenisKelamin(value)}
             >
               <Option value="Pria">Pria</Option>
               <Option value="Wanita">Wanita</Option>
             </Select>
           </div>
           <div>
-            <Input
-              type="text"
+            <Select
+              label="Pilih kamar"
               value={kamar}
-              label="Kamar"
-              onChange={(e) => setKamar(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-              placeholder="Masukkan nomor kamar"
-            />
+              onChange={(value) => setKamar(value)}
+              disabled={sedangMemuatTampilkanKamar}
+            >
+              {/* Tampilkan hanya kamar yang kosong */}
+              {kamarKosong.length > 0 ? (
+                kamarKosong.map((k) => (
+                  <Option key={k.id} value={k.id}>
+                    {k.No_Pintu}
+                  </Option>
+                ))
+              ) : (
+                <Option disabled value="">
+                  Tidak ada kamar kosong
+                </Option>
+              )}
+            </Select>
+            {sedangMemuatTampilkanKamar && (
+              <p className="text-sm text-gray-500">Memuat daftar kamar...</p>
+            )}
           </div>
+
           <div>
             <Input
               type="text"
               value={noTelepon}
               label="No Telepon"
               onChange={(e) => setNoTelepon(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              className="w-full"
               placeholder="Masukkan no telepon"
             />
           </div>
@@ -88,8 +108,9 @@ const ModalTambahPenghuni = ({ open, setOpen }) => {
               value={alamat}
               label="Alamat"
               onChange={(e) => setAlamat(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            ></Textarea>
+              className="w-full"
+              placeholder="Masukkan alamat lengkap"
+            />
           </div>
         </div>
       </DialogBody>

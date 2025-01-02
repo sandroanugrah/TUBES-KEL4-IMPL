@@ -5,6 +5,7 @@ import Image from "next/image";
 // Asset IMG
 import gambarFotoProfil from "@/assets/img/kamar.jpg";
 import gambarBackground from "@/assets/img/kosan.jpg";
+import { FaWhatsapp } from "react-icons/fa";
 
 // Component
 import Memuat from "@/components/memuat";
@@ -14,9 +15,21 @@ import useTampilkanKamar from "@/hooks/useTampilkanKamar";
 const Page = () => {
   const { daftarKamar, sedangMemuatTampilkanKamar } = useTampilkanKamar();
 
+  const getGreeting = () => {
+    const hours = new Date().getHours();
+    if (hours >= 5 && hours < 12) return "Halo, selamat pagi";
+    if (hours >= 12 && hours < 15) return "Halo, selamat siang";
+    if (hours >= 15 && hours < 18) return "Halo, selamat sore";
+    return "Halo, selamat malam";
+  };
+
+  const waUrl = `https://wa.me/6285363972317?text=${encodeURIComponent(
+    `${getGreeting()}, saya tertarik dengan informasi Alizar Kost anda, Bisa bantu saya mengenai informasi kosannya?`
+  )}`;
+
   return (
     <div
-      className="h-screen flex bg-[#2c2c2c] text-white"
+      className="h-screen flex bg-[#2c2c2c] text-white relative"
       style={{
         backgroundImage: `url(${gambarBackground.src})`,
         backgroundSize: "cover",
@@ -111,6 +124,16 @@ const Page = () => {
           </section>
         </main>
       </div>
+
+      <a
+        href={waUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-4 right-4 bg-[#25D366] px-6 py-4 rounded-full shadow-lg flex items-center justify-center text-white text-lg font-medium gap-3"
+      >
+        <FaWhatsapp size={24} />
+        Hubungi Kami untuk Informasi Selengkapnya
+      </a>
     </div>
   );
 };

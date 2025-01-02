@@ -17,19 +17,24 @@ import {
 import ModalTambahKamar from "@/components/modalTambahKamar";
 import Memuat from "@/components/memuat";
 import ModalKonfirmasiHapusKamar from "@/components/modalKonfimasiHapusKamar";
+import ModalSuntingKamar from "@/components/modalSuntingKamar";
 
 // Pengait Hooks
 import useTampilkanKamar from "@/hooks/useTampilkanKamar";
 import useHapusKamar from "@/hooks/useHapusKamar";
+import useSuntingKamar from "@/hooks/useSuntingKamar";
 
 const judul_tabel = ["No", "No Pintu", "Lantai", "Status", "Fasilitas", "Aksi"];
 
 const KontenKamar = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [bukaModalSuntingKamar, setBukaModalSuntingKamar] = useState(false);
   const [bukaModalHapusKamar, setBukaModalHapusKamar] = useState(false);
   const [kamarYangTerpilih, setKamarYangTerpilih] = useState(null);
   const { daftarKamar, sedangMemuatTampilkanKamar } = useTampilkanKamar();
   const { sedangMemuatHapusKamar, hapusKamar } = useHapusKamar();
+  const { suntingKamar, sedangMemuatSuntingKamar } =
+    useSuntingKamar(kamarYangTerpilih);
 
   const tanganiHapus = (idKamar) => {
     setKamarYangTerpilih(idKamar);
@@ -44,9 +49,13 @@ const KontenKamar = () => {
     }
   };
 
+  const tanganiSunting = (kamar) => {
+    setKamarYangTerpilih(kamar);
+    setBukaModalSuntingKamar(true);
+  };
+
   return (
     <Card className="h-full w-full">
-      {/* Header */}
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
@@ -70,7 +79,6 @@ const KontenKamar = () => {
         </div>
       </CardHeader>
 
-      {/* Body */}
       <CardBody className="px-0">
         {sedangMemuatTampilkanKamar ? (
           <Memuat />
@@ -96,7 +104,6 @@ const KontenKamar = () => {
             </thead>
             <tbody>
               {!daftarKamar || daftarKamar.length === 0 ? (
-                // Jika data kosong, tampilkan pesan di dalam tabel
                 <tr>
                   <td
                     colSpan={judul_tabel.length}
@@ -108,7 +115,6 @@ const KontenKamar = () => {
                   </td>
                 </tr>
               ) : (
-                // Jika ada data, tampilkan data kamar
                 daftarKamar.map((kamar, index) => (
                   <tr key={kamar.id}>
                     <td className="p-4 border-b border-blue-gray-50">
@@ -134,7 +140,10 @@ const KontenKamar = () => {
                     </td>
                     <td className="p-4 border-b border-blue-gray-50">
                       <Tooltip content="Edit Kamar">
-                        <IconButton variant="text">
+                        <IconButton
+                          variant="text"
+                          onClick={() => tanganiSunting(kamar.id)}
+                        >
                           <PencilIcon className="h-4 w-4" />
                         </IconButton>
                       </Tooltip>
@@ -156,6 +165,14 @@ const KontenKamar = () => {
       </CardBody>
 
       <ModalTambahKamar open={modalOpen} setOpen={setModalOpen} />
+
+      <ModalSuntingKamar
+        terbuka={bukaModalSuntingKamar}
+        tertutup={setBukaModalSuntingKamar}
+        kamarYangTerpilih={kamarYangTerpilih}
+        suntingKamar={suntingKamar}
+        sedangMemuatSuntingKamar={sedangMemuatSuntingKamar}
+      />
 
       <ModalKonfirmasiHapusKamar
         terbuka={bukaModalHapusKamar}

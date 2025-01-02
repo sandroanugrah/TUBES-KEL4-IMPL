@@ -8,35 +8,31 @@ import {
   IconButton,
   Input,
   Button,
-  Select,
-  Option,
   Textarea,
 } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 // KOMPONEN KAMI
 import Memuat from "@/components/memuat";
 // PENGAIT KAMI
-import useSuntingPenghuni from "@/hooks/useSuntingPenghuni";
+import useSuntingKamar from "@/hooks/useSuntingKamar";
 
-const ModalSuntingPenghuni = ({ terbuka, tertutup, penghuniYangTerpilih }) => {
+const ModalSuntingKamar = ({ terbuka, tertutup, kamarYangTerpilih }) => {
   useEffect(() => {
-    if (!penghuniYangTerpilih) {
+    if (!kamarYangTerpilih) {
       tertutup(false);
     }
-  }, [penghuniYangTerpilih, tertutup]);
+  }, [kamarYangTerpilih, tertutup]);
 
   const {
-    nama,
-    setNama,
-    jenisKelamin,
-    setJenisKelamin,
-    noTelepon,
-    setNoTelepon,
-    alamat,
-    setAlamat,
-    suntingPenghuni,
-    sedangMemuatSuntingPenghuni,
-  } = useSuntingPenghuni(penghuniYangTerpilih);
+    noPintu,
+    setNoPintu,
+    lantai,
+    setLantai,
+    fasilitas,
+    setFasilitas,
+    suntingKamar,
+    sedangMemuatSuntingKamar,
+  } = useSuntingKamar(kamarYangTerpilih);
 
   return (
     <Dialog
@@ -60,73 +56,61 @@ const ModalSuntingPenghuni = ({ terbuka, tertutup, penghuniYangTerpilih }) => {
         </IconButton>
       </div>
 
-      <DialogHeader className="text-black">Sunting Penghuni</DialogHeader>
+      <DialogHeader className="text-black">Sunting Kamar</DialogHeader>
       <DialogBody divider>
         <form className="flex flex-col gap-4">
           <Typography className="-mb-2" variant="h6">
-            Nama Penghuni
+            Nomor Pintu
           </Typography>
           <Input
-            label="Masukkan Nama Penghuni"
+            label="Masukkan Nomor Pintu"
             size="lg"
-            value={nama}
-            onChange={(e) => setNama(e.target.value)}
+            value={noPintu}
+            onChange={(e) => setNoPintu(e.target.value)}
           />
 
           <Typography className="-mb-2" variant="h6">
-            Jenis Kelamin
-          </Typography>
-          <Select
-            label="Pilih Jenis Kelamin"
-            size="lg"
-            value={jenisKelamin}
-            onChange={(value) => setJenisKelamin(value)}
-          >
-            <Option value="Pria">Pria</Option>
-            <Option value="Wanita">Wanita</Option>
-          </Select>
-          <Typography className="-mb-2" variant="h6">
-            Nomor Telepon
+            Lantai
           </Typography>
           <Input
             type="text"
-            label="Masukkan Nomor Telepon"
+            label="Masukkan Lantai"
             size="lg"
-            value={noTelepon}
-            onChange={(e) => setNoTelepon(e.target.value)}
+            value={lantai}
+            onChange={(e) => setLantai(e.target.value)}
           />
 
           <Typography className="-mb-2" variant="h6">
-            Alamat
+            Fasilitas
           </Typography>
           <Textarea
-            label="Masukkan Alamat Penghuni"
+            label="Masukkan Fasilitas Kamar"
             size="lg"
-            value={alamat}
-            onChange={(e) => setAlamat(e.target.value)}
+            value={fasilitas}
+            onChange={(e) => setFasilitas(e.target.value)}
           />
         </form>
       </DialogBody>
       <DialogFooter>
         <Button
           onClick={async () => {
-            await suntingPenghuni();
+            await suntingKamar();
             tertutup(false);
           }}
           variant="gradient"
           color="black"
-          disabled={sedangMemuatSuntingPenghuni}
+          disabled={sedangMemuatSuntingKamar}
           className={`${
-            sedangMemuatSuntingPenghuni
+            sedangMemuatSuntingKamar
               ? "opacity-50 cursor-not-allowed"
               : "opacity-100"
           }`}
         >
-          {sedangMemuatSuntingPenghuni ? <Memuat /> : "Sunting Penghuni"}
+          {sedangMemuatSuntingKamar ? <Memuat /> : "Sunting Kamar"}
         </Button>
       </DialogFooter>
     </Dialog>
   );
 };
 
-export default ModalSuntingPenghuni;
+export default ModalSuntingKamar;

@@ -39,7 +39,7 @@ const KontenPenghuni = () => {
   const { suntingPenghuni, sedangMemuatSuntingPenghuni } =
     useSuntingPenghuni(penghuniYangTerpilih);
 
-  const tanganiHapus = (idPenghuni, kamarId) => {
+  const tanganiHapus = (idPenghuni) => {
     setPenghuniYangTerpilih(idPenghuni);
     setBukaModalHapusPenghuni(true);
   };

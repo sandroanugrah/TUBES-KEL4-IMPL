@@ -15,8 +15,15 @@ import useTampilkanKamar from "@/hooks/useTampilkanKamar";
 const Page = () => {
   const { daftarKamar, sedangMemuatTampilkanKamar } = useTampilkanKamar();
 
+  // Fungsi untuk menentukan sapaan berdasarkan waktu zona WIB
   const getGreeting = () => {
-    const hours = new Date().getHours();
+    const now = new Date();
+    const hours = new Intl.DateTimeFormat("id-ID", {
+      hour: "2-digit",
+      hour12: false,
+      timeZone: "Asia/Jakarta",
+    }).format(now);
+
     if (hours >= 5 && hours < 12) return "Halo, selamat pagi";
     if (hours >= 12 && hours < 15) return "Halo, selamat siang";
     if (hours >= 15 && hours < 18) return "Halo, selamat sore";

@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { FaHome, FaRestroom, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaHome,
+  FaRestroom,
+  FaUserCircle,
+  FaSignOutAlt,
+  FaMoneyBillWave,
+} from "react-icons/fa";
 import { IoBed } from "react-icons/io5";
 import { RiAdminFill, RiSettings4Fill } from "react-icons/ri";
 // Hooks
@@ -45,6 +51,13 @@ function Sidebar({ pengarah }) {
           >
             <FaRestroom className="text-xl" />
             Data Penghuni
+          </li>
+          <li
+            className="flex items-center gap-3 mb-4 cursor-pointer hover:bg-gray-700 p-2 rounded"
+            onClick={() => pengarah.push("/admin/dataPembayaran")}
+          >
+            <FaMoneyBillWave className="text-xl" />
+            Tagihan Penghuni
           </li>
 
           <li

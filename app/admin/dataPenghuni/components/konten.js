@@ -19,6 +19,7 @@ import useHapusPenghuni from "@/hooks/useHapusPenghuni";
 import useSuntingPenghuni from "@/hooks/useSuntingPenghuni";
 
 const judul_tabel = [
+  "No",
   "Nama Penghuni",
   "Jenis Kelamin",
   "Kamar Yang Dihuni",
@@ -87,6 +88,12 @@ const KontenPenghuni = () => {
           <div className="p-4 text-center">
             <Typography color="gray">Memuat data penghuni...</Typography>
           </div>
+        ) : daftarPenghuni.length === 0 ? (
+          <div className="p-4 text-center text-red-500">
+            <Typography className="font-bold">
+              Tidak ada data penghuni
+            </Typography>
+          </div>
         ) : (
           <table className="w-full min-w-max table-auto text-left">
             <thead>
@@ -114,6 +121,11 @@ const KontenPenghuni = () => {
                   key={`${penghuni.id}-${index}`}
                   className="even:bg-blue-gray-50/50"
                 >
+                  <td className="p-4">
+                    <Typography variant="small" color="blue-gray">
+                      {index + 1}
+                    </Typography>
+                  </td>
                   <td className="p-4">
                     <Typography variant="small" color="blue-gray">
                       {penghuni.Nama}
@@ -144,7 +156,7 @@ const KontenPenghuni = () => {
                       <IconButton
                         variant="text"
                         color="blue"
-                        onClick={() => tanganiSunting(penghuni.id)}
+                        onClick={() => tanganiSunting(penghuni)}
                       >
                         <PencilIcon className="h-5 w-5" />
                       </IconButton>

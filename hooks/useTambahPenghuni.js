@@ -33,7 +33,10 @@ const useTambahPenghuni = () => {
         return;
       }
 
-      const referensiPenghuni = doc(database, "penghuni", nama + "_" + kamar);
+      const idPenghuni = `${nama}_${kamar}`;
+      const referensiPenghuni = doc(database, "penghuni", idPenghuni);
+      const referensiPembayaran = doc(database, "pembayaran", idPenghuni);
+
       await setDoc(referensiPenghuni, {
         Nama: nama,
         Jenis_Kelamin: jenisKelamin,
@@ -43,9 +46,21 @@ const useTambahPenghuni = () => {
         No_Pintu: noPintu,
       });
 
+      await setDoc(referensiPembayaran, {
+        Penghuni_ID: idPenghuni,
+        Nama: nama,
+        Kamar_ID: kamar,
+        No_Pintu: noPintu,
+        Status_Pembayaran: "Belum Lunas",
+        Sisa_Tagihan: 3500000,
+        Total_Tagihan: 3500000,
+      });
+
       await setDoc(referensiKamar, { Status: "Terisi" }, { merge: true });
 
-      toast.success(`Penghuni ${nama} berhasil ditambahkan.`);
+      toast.success(
+        `Penghuni ${nama} berhasil ditambahkan beserta data pembayaran.`
+      );
     } catch (error) {
       toast.error("Terjadi kesalahan: " + error.message);
     } finally {

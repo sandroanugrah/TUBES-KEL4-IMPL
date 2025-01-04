@@ -35,7 +35,6 @@ const ModalTambahPenghuni = ({ open, setOpen }) => {
 
   const { daftarKamar, sedangMemuatTampilkanKamar } = useTampilkanKamar();
 
-  // Filter kamar yang kosong (misalnya kamar yang tidak memiliki penghuni)
   const kamarKosong = daftarKamar.filter((k) => k.Status === "Kosong");
 
   const handleSubmit = async () => {
@@ -75,7 +74,6 @@ const ModalTambahPenghuni = ({ open, setOpen }) => {
               onChange={(value) => setKamar(value)}
               disabled={sedangMemuatTampilkanKamar}
             >
-              {/* Tampilkan hanya kamar yang kosong */}
               {kamarKosong.length > 0 ? (
                 kamarKosong.map((k) => (
                   <Option key={k.id} value={k.id}>

@@ -15,8 +15,7 @@ import {
 
 // PENGAIT KAMI
 import useTambahPenghuni from "@/hooks/useTambahPenghuni";
-import useTampilkanKamar from "@/hooks/useTampilkanKamar";
-
+import useTampilkanKamarModal from "@/hooks/useTampilkanSemuaKamarModal";
 const ModalTambahPenghuni = ({ open, setOpen }) => {
   const {
     nama,
@@ -33,7 +32,7 @@ const ModalTambahPenghuni = ({ open, setOpen }) => {
     sedangMemuatTambahPenghuni,
   } = useTambahPenghuni();
 
-  const { daftarKamar, sedangMemuatTampilkanKamar } = useTampilkanKamar();
+  const { daftarKamar, sedangMemuatTampilkanKamar } = useTampilkanKamarModal();
 
   const kamarKosong = daftarKamar.filter((k) => k.Status === "Kosong");
 

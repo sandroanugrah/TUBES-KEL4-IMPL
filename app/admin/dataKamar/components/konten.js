@@ -11,6 +11,7 @@ import {
   Chip,
   IconButton,
   Tooltip,
+  CardFooter,
 } from "@material-tailwind/react";
 
 // Komponen
@@ -31,7 +32,16 @@ const KontenKamar = () => {
   const [bukaModalSuntingKamar, setBukaModalSuntingKamar] = useState(false);
   const [bukaModalHapusKamar, setBukaModalHapusKamar] = useState(false);
   const [kamarYangTerpilih, setKamarYangTerpilih] = useState(null);
-  const { daftarKamar, sedangMemuatTampilkanKamar } = useTampilkanKamar();
+
+  const {
+    totalKamar,
+    daftarKamar,
+    sedangMemuatTampilkanKamar,
+    halaman,
+    ambilHalamanSebelumnya,
+    ambilHalamanSelanjutnya,
+  } = useTampilkanKamar();
+
   const { sedangMemuatHapusKamar, hapusKamar } = useHapusKamar();
   const { suntingKamar, sedangMemuatSuntingKamar } =
     useSuntingKamar(kamarYangTerpilih);
@@ -83,84 +93,121 @@ const KontenKamar = () => {
         {sedangMemuatTampilkanKamar ? (
           <Memuat />
         ) : (
-          <table className="mt-4 w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                {judul_tabel.map((head) => (
-                  <th
-                    key={head}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {!daftarKamar || daftarKamar.length === 0 ? (
+          <>
+            <table className="mt-4 w-full min-w-max table-auto text-left">
+              <thead>
                 <tr>
-                  <td
-                    colSpan={judul_tabel.length}
-                    className="text-center text-gray-500 p-4"
-                  >
-                    <Typography variant="h6" color="red">
-                      Data Kamar Tidak Ada
-                    </Typography>
-                  </td>
+                  {judul_tabel.map((head) => (
+                    <th
+                      key={head}
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
                 </tr>
-              ) : (
-                daftarKamar.map((kamar, index) => (
-                  <tr key={kamar.id}>
-                    <td className="p-4 border-b border-blue-gray-50">
-                      {index + 1}
-                    </td>
-                    <td className="p-4 border-b border-blue-gray-50">
-                      {kamar.No_Pintu}
-                    </td>
-                    <td className="p-4 border-b border-blue-gray-50">
-                      {kamar.Lantai}
-                    </td>
-                    <td className="p-4 border-b border-blue-gray-50">
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        value={kamar.Status}
-                        color={kamar.Status === "Terisi" ? "red" : "green"}
-                        className="w-fit text-xs leading-tight truncate"
-                      />
-                    </td>
-                    <td className="p-4 border-b border-blue-gray-50">
-                      {kamar.Fasilitas}
-                    </td>
-                    <td className="p-4 border-b border-blue-gray-50">
-                      <Tooltip content="Edit Kamar">
-                        <IconButton
-                          variant="text"
-                          onClick={() => tanganiSunting(kamar.id)}
-                        >
-                          <PencilIcon className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip content="Delete Kamar">
-                        <IconButton
-                          variant="text"
-                          onClick={() => tanganiHapus(kamar.id)}
-                        >
-                          <FaTrashAlt className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip>
+              </thead>
+              <tbody>
+                {!daftarKamar || daftarKamar.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={judul_tabel.length}
+                      className="text-center text-gray-500 p-4"
+                    >
+                      <Typography variant="h6" color="red">
+                        Data Kamar Tidak Ada
+                      </Typography>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  daftarKamar.map((kamar, index) => {
+                    const nomorUrut =
+                      index + 1 + (halaman - 1) * daftarKamar.length;
+
+                    return (
+                      <tr key={kamar.id}>
+                        <td className="p-4 border-b border-blue-gray-50">
+                          {nomorUrut}
+                        </td>
+                        <td className="p-4 border-b border-blue-gray-50">
+                          {kamar.No_Pintu}
+                        </td>
+                        <td className="p-4 border-b border-blue-gray-50">
+                          {kamar.Lantai}
+                        </td>
+                        <td className="p-4 border-b border-blue-gray-50">
+                          <Chip
+                            variant="ghost"
+                            size="sm"
+                            value={kamar.Status}
+                            color={kamar.Status === "Terisi" ? "red" : "green"}
+                            className="w-fit text-xs leading-tight truncate"
+                          />
+                        </td>
+                        <td className="p-4 border-b border-blue-gray-50">
+                          {kamar.Fasilitas}
+                        </td>
+                        <td className="p-4 border-b border-blue-gray-50">
+                          <Tooltip content="Edit Kamar">
+                            <IconButton
+                              variant="text"
+                              onClick={() => tanganiSunting(kamar.id)}
+                            >
+                              <PencilIcon className="h-4 w-4" />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip content="Delete Kamar">
+                            <IconButton
+                              variant="text"
+                              onClick={() => tanganiHapus(kamar.id)}
+                            >
+                              <FaTrashAlt className="h-4 w-4" />
+                            </IconButton>
+                          </Tooltip>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+            <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="font-normal"
+              >
+                Halaman {halaman} dari {Math.ceil(totalKamar / 5)}
+              </Typography>
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={ambilHalamanSebelumnya}
+                  variant="outlined"
+                  size="sm"
+                  disabled={sedangMemuatTampilkanKamar || halaman === 1}
+                >
+                  Sebelumnya
+                </Button>
+                <Button
+                  onClick={ambilHalamanSelanjutnya}
+                  variant="outlined"
+                  size="sm"
+                  disabled={
+                    sedangMemuatTampilkanKamar ||
+                    halaman === Math.ceil(totalKamar / 5)
+                  }
+                >
+                  Selanjutnya
+                </Button>
+              </div>
+            </CardFooter>
+          </>
         )}
       </CardBody>
 

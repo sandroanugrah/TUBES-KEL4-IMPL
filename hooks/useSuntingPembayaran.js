@@ -32,6 +32,15 @@ export default function useSuntingPembayaran(idPembayaran) {
       toast.error("Masukkan jumlah bayar yang valid");
       return false;
     }
+
+    // Tambahkan validasi jika jumlah bayar lebih besar dari sisa tagihan
+    if (jumlahBayar > sisaTagihan) {
+      toast.error(
+        `Jumlah bayar tidak boleh melebihi sisa tagihan Rp. ${sisaTagihan.toLocaleString()}`
+      );
+      return false;
+    }
+
     return true;
   };
 

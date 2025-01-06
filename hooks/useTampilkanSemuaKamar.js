@@ -3,11 +3,13 @@ import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { database } from "@/lib/firebaseConfig";
 
-const useTampilkanKamar = (batasHalaman = 5) => {
+const useTampilkanKamar = (batasHalaman = 10) => {
   const [sedangMemuatTampilkanKamar, setSedangMemuatTampilkanKamar] =
     useState(false);
   const [daftarKamar, setDaftarKamar] = useState([]);
   const [totalKamar, setTotalKamar] = useState(0);
+  const [totalKamarTerisi, setTotalKamarTerisi] = useState(0);
+  const [totalKamarTersedia, setTotalKamarTersedia] = useState(0);
   const [halaman, setHalaman] = useState(1);
 
   const ambilDaftarKamar = useCallback(async () => {
@@ -27,6 +29,13 @@ const useTampilkanKamar = (batasHalaman = 5) => {
       }));
 
       setTotalKamar(semuaKamar.length);
+
+      // Hitung jumlah kamar terisi dan tersedia
+      const terisi = semuaKamar.filter((kamar) => kamar.Status === "Terisi");
+      const tersedia = semuaKamar.filter((kamar) => kamar.Status !== "Terisi");
+
+      setTotalKamarTerisi(terisi.length);
+      setTotalKamarTersedia(tersedia.length);
 
       const startIndex = (halaman - 1) * batasHalaman;
       const endIndex = startIndex + batasHalaman;
@@ -61,6 +70,8 @@ const useTampilkanKamar = (batasHalaman = 5) => {
 
   return {
     totalKamar,
+    totalKamarTerisi,
+    totalKamarTersedia,
     daftarKamar,
     sedangMemuatTampilkanKamar,
     halaman,

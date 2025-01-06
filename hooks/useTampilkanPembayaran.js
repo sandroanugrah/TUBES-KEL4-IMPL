@@ -21,7 +21,16 @@ const useTampilkanPembayaran = () => {
         ...docSnapshot.data(),
       }));
 
-      setDaftarPembayaran(pembayaran);
+      const pembayaranBelumLunas = pembayaran.filter(
+        (item) => item.Status_Pembayaran === "Belum Lunas"
+      );
+      const pembayaranLunas = pembayaran.filter(
+        (item) => item.Status_Pembayaran === "Lunas"
+      );
+
+      const pembayaranUrut = [...pembayaranBelumLunas, ...pembayaranLunas];
+
+      setDaftarPembayaran(pembayaranUrut);
       setTotalPembayaran(pembayaran.length);
     } catch (error) {
       toast.error(

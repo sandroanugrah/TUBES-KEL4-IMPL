@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { CardFooter, Typography, Button } from "@material-tailwind/react";
 // Asset IMG
 import gambarFotoProfil from "@/assets/img/kamar.jpg";
 import gambarBackground from "@/assets/img/kosan.jpg";
@@ -10,12 +11,25 @@ import { FaWhatsapp } from "react-icons/fa";
 // Component
 import Memuat from "@/components/memuat";
 // Hooks
-import useTampilkanKamar from "@/hooks/useTampilkanKamar";
+import useTampilkanSemuaKamar from "@/hooks/useTampilkanSemuaKamar";
 
 const Page = () => {
-  const { daftarKamar, sedangMemuatTampilkanKamar } = useTampilkanKamar();
+  const {
+    totalKamar,
+    daftarKamar,
+    sedangMemuatTampilkanKamar,
+    halaman,
+    ambilHalamanSebelumnya,
+    ambilHalamanSelanjutnya,
+  } = useTampilkanSemuaKamar();
 
-  // Fungsi untuk menentukan sapaan berdasarkan waktu zona WIB
+  const totalKamarTerisi = daftarKamar.filter(
+    (kamar) => kamar.Status === "Terisi"
+  ).length;
+  const totalKamarTersedia = daftarKamar.filter(
+    (kamar) => kamar.Status !== "Terisi"
+  ).length;
+
   const getGreeting = () => {
     const now = new Date();
     const hours = new Intl.DateTimeFormat("id-ID", {
@@ -34,9 +48,11 @@ const Page = () => {
     `${getGreeting()}, saya tertarik dengan informasi Alizar Kost anda, Bisa bantu saya mengenai informasi kosannya?`
   )}`;
 
+  const totalHalaman = Math.ceil(totalKamar / 10);
+
   return (
     <div
-      className="h-screen flex bg-[#2c2c2c] text-white relative"
+      className="h-screen flex flex-col bg-[#2c2c2c] text-white relative"
       style={{
         backgroundImage: `url(${gambarBackground.src})`,
         backgroundSize: "cover",
@@ -44,35 +60,36 @@ const Page = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <div className="flex-1 flex flex-col backdrop-blur-lg">
-        <header className="flex justify-between items-center p-4 border-b border-[#8e44ad] bg-black/50">
-          <p className="mx-auto text-[#f1c40f] text-xl font-bold">
-            Alizar Kost
-          </p>
-        </header>
-        <main className="p-4 flex flex-col gap-5 bg-black/50">
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-[#34495e] p-4 rounded-xl flex items-center justify-center">
-              Jumlah Kamar: {daftarKamar.length}
-            </div>
-            <div className="bg-[#c0392b] p-4 rounded-xl flex items-center justify-center">
-              Kamar Terisi:{" "}
-              {daftarKamar.filter((kamar) => kamar.Status === "Terisi").length}
-            </div>
-            <div className="bg-[#58d68d] p-4 rounded-xl flex items-center justify-center">
-              Kamar Tersedia:{" "}
-              {daftarKamar.filter((kamar) => kamar.Status !== "Terisi").length}
-            </div>
+      <header className="flex flex-col items-center p-4 border-b border-[#8e44ad] bg-black/50">
+        <p className="text-[#f1c40f] text-4xl font-extrabold mb-6 tracking-wider">
+          Alizar Kost
+        </p>
+
+        <div className="grid grid-cols-3 gap-6 w-full max-w-screen-lg">
+          <div className="bg-[#34495e] p-4 rounded-xl flex items-center justify-center">
+            Jumlah Kamar: {totalKamar}
           </div>
-          <section>
-            <h2 className="text-xl font-bold mb-4 text-[#f1c40f]">
-              Pilihan Kamar
-            </h2>
-            {sedangMemuatTampilkanKamar ? (
-              <Memuat />
-            ) : (
-              <div className="grid grid-cols-5 gap-4">
-                {daftarKamar.map((kamar, i) => (
+          <div className="bg-[#c0392b] p-4 rounded-xl flex items-center justify-center">
+            Kamar Terisi: {totalKamarTerisi}
+          </div>
+          <div className="bg-[#58d68d] p-4 rounded-xl flex items-center justify-center">
+            Kamar Tersedia: {totalKamarTersedia}
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1 p-4 bg-black/50 backdrop-blur-lg">
+        <section>
+          <h2 className="text-xl font-bold mb-4 text-[#f1c40f]">
+            Pilihan Kamar
+          </h2>
+
+          {sedangMemuatTampilkanKamar ? (
+            <Memuat />
+          ) : (
+            <>
+              <div className="grid grid-cols-5 gap-4 mb-8">
+                {daftarKamar.map((kamar) => (
                   <div
                     key={kamar.id}
                     className={`p-4 rounded-lg flex flex-col items-center gap-4 ${
@@ -127,10 +144,67 @@ const Page = () => {
                   </div>
                 ))}
               </div>
-            )}
-          </section>
-        </main>
-      </div>
+              <CardFooter className="flex items-center justify-between border-t ">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal text-white"
+                >
+                  Halaman {halaman} dari {totalHalaman}
+                </Typography>
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={ambilHalamanSebelumnya}
+                    variant="outlined"
+                    size="sm"
+                    disabled={sedangMemuatTampilkanKamar || halaman === 1}
+                    className="bg-[#3498db] border-[#3498db] text-white hover:bg-[#2980b9] hover:border-[#2980b9] focus:ring-2 focus:ring-[#2980b9] transition-colors"
+                  >
+                    Sebelumnya
+                  </Button>
+                  <Button
+                    onClick={ambilHalamanSelanjutnya}
+                    variant="outlined"
+                    size="sm"
+                    disabled={
+                      sedangMemuatTampilkanKamar || halaman === totalHalaman
+                    }
+                    className="bg-[#3498db] border-[#3498db] text-white hover:bg-[#2980b9] hover:border-[#2980b9] focus:ring-2 focus:ring-[#2980b9] transition-colors"
+                  >
+                    Selanjutnya
+                  </Button>
+                </div>
+              </CardFooter>
+            </>
+          )}
+        </section>
+
+        <section className="bg-black/50 mt-8 rounded-xl p-4 flex flex-col items-center">
+          <h2 className="text-xl font-bold mb-4 text-[#f1c40f]">
+            Informasi Kosan
+          </h2>
+          <div className="text-sm text-center">
+            <p className="mb-2">
+              <span className="font-semibold text-[#f1c40f]">Alamat:</span> Jl.
+              Alizar No. 123, Jakarta Selatan
+            </p>
+            <p className="mb-2">
+              <span className="font-semibold text-[#f1c40f]">Fasilitas:</span>{" "}
+              Wifi, Air Conditioner, Listrik 24 Jam, Tempat Parkir, Dapur
+              Bersama
+            </p>
+            <p className="mb-2">
+              <span className="font-semibold text-[#f1c40f]">Harga:</span> Mulai
+              dari Rp. 1.500.000/bulan
+            </p>
+            <p>
+              <span className="font-semibold text-[#f1c40f]">Kebijakan:</span>{" "}
+              Tidak diperbolehkan membawa hewan peliharaan, merokok hanya di
+              area luar
+            </p>
+          </div>
+        </section>
+      </main>
 
       <a
         href={waUrl}

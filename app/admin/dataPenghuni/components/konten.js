@@ -156,7 +156,7 @@ const KontenPenghuni = () => {
                       <IconButton
                         variant="text"
                         color="blue"
-                        onClick={() => tanganiSunting(penghuni)}
+                        onClick={() => tanganiSunting(penghuni.id)}
                       >
                         <PencilIcon className="h-5 w-5" />
                       </IconButton>

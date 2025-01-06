@@ -3,12 +3,13 @@ import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { database } from "@/lib/firebaseConfig";
 
-const useTampilkanKamar = (batasHalaman = 5) => {
+const useTampilkanKamarModal = () => {
   const [sedangMemuatTampilkanKamar, setSedangMemuatTampilkanKamar] =
     useState(false);
   const [daftarKamar, setDaftarKamar] = useState([]);
   const [totalKamar, setTotalKamar] = useState(0);
-  const [halaman, setHalaman] = useState(1);
+  const [totalKamarTerisi, setTotalKamarTerisi] = useState(0);
+  const [totalKamarTersedia, setTotalKamarTersedia] = useState(0);
 
   const ambilDaftarKamar = useCallback(async () => {
     const referensiKamar = collection(database, "kamar");
@@ -28,11 +29,15 @@ const useTampilkanKamar = (batasHalaman = 5) => {
 
       setTotalKamar(semuaKamar.length);
 
-      const startIndex = (halaman - 1) * batasHalaman;
-      const endIndex = startIndex + batasHalaman;
-      const kamarHalamanSaatIni = semuaKamar.slice(startIndex, endIndex);
+      // Hitung jumlah kamar terisi dan tersedia
+      const terisi = semuaKamar.filter((kamar) => kamar.Status === "Terisi");
+      const tersedia = semuaKamar.filter((kamar) => kamar.Status !== "Terisi");
 
-      setDaftarKamar(kamarHalamanSaatIni);
+      setTotalKamarTerisi(terisi.length);
+      setTotalKamarTersedia(tersedia.length);
+
+      // Tampilkan semua kamar
+      setDaftarKamar(semuaKamar);
     } catch (error) {
       toast.error(
         "Terjadi kesalahan saat mengambil daftar kamar: " + error.message
@@ -40,33 +45,19 @@ const useTampilkanKamar = (batasHalaman = 5) => {
     } finally {
       setSedangMemuatTampilkanKamar(false);
     }
-  }, [halaman, batasHalaman]);
+  }, []);
 
   useEffect(() => {
     ambilDaftarKamar();
   }, [ambilDaftarKamar]);
 
-  const ambilHalamanSebelumnya = () => {
-    if (halaman > 1) {
-      setHalaman(halaman - 1);
-    }
-  };
-
-  const ambilHalamanSelanjutnya = () => {
-    const totalHalaman = Math.ceil(totalKamar / batasHalaman);
-    if (halaman < totalHalaman) {
-      setHalaman(halaman + 1);
-    }
-  };
-
   return {
     totalKamar,
+    totalKamarTerisi,
+    totalKamarTersedia,
     daftarKamar,
     sedangMemuatTampilkanKamar,
-    halaman,
-    ambilHalamanSebelumnya,
-    ambilHalamanSelanjutnya,
   };
 };
 
-export default useTampilkanKamar;
+export default useTampilkanKamarModal;

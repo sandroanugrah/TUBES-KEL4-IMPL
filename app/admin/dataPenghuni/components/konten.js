@@ -8,6 +8,7 @@ import {
   IconButton,
   Tooltip,
   Button,
+  CardFooter,
 } from "@material-tailwind/react";
 // Components
 import ModalTambahPenghuni from "@/components/modalTambahPenghuni";
@@ -34,9 +35,17 @@ const KontenPenghuni = () => {
   const [bukaModalSuntingPenghuni, setBukaModalSuntingPenghuni] =
     useState(false);
   const [penghuniYangTerpilih, setPenghuniYangTerpilih] = useState(null);
-  const { sedangMemuatHapusPenghuni, hapusPenghuni } = useHapusPenghuni();
-  const { daftarPenghuni, sedangMemuatTampilkanPenghuni } =
-    useTampilkanPenghuni();
+
+  const {
+    daftarPenghuni,
+    halaman,
+    totalPenghuni,
+    sedangMemuatTampilkanPenghuni,
+    ambilHalamanSebelumnya,
+    ambilHalamanSelanjutnya,
+  } = useTampilkanPenghuni();
+
+  const { hapusPenghuni, sedangMemuatHapusPenghuni } = useHapusPenghuni();
   const { suntingPenghuni, sedangMemuatSuntingPenghuni } =
     useSuntingPenghuni(penghuniYangTerpilih);
 
@@ -95,88 +104,117 @@ const KontenPenghuni = () => {
             </Typography>
           </div>
         ) : (
-          <table className="w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                {judul_tabel.map((head) => (
-                  <th
-                    key={head}
-                    className="border-b border-blue-gray-200 bg-blue-gray-50 p-4"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-semibold leading-none opacity-70"
+          <div>
+            <table className="w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  {judul_tabel.map((head) => (
+                    <th
+                      key={head}
+                      className="border-b border-blue-gray-200 bg-blue-gray-50 p-4"
                     >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-
-            <tbody>
-              {daftarPenghuni.map((penghuni, index) => (
-                <tr
-                  key={`${penghuni.id}-${index}`}
-                  className="even:bg-blue-gray-50/50"
-                >
-                  <td className="p-4">
-                    <Typography variant="small" color="blue-gray">
-                      {index + 1}
-                    </Typography>
-                  </td>
-                  <td className="p-4">
-                    <Typography variant="small" color="blue-gray">
-                      {penghuni.Nama}
-                    </Typography>
-                  </td>
-                  <td className="p-4">
-                    <Typography variant="small" color="blue-gray">
-                      {penghuni.Jenis_Kelamin}
-                    </Typography>
-                  </td>
-                  <td className="p-4">
-                    <Typography variant="small" color="blue-gray">
-                      {penghuni.No_Pintu}
-                    </Typography>
-                  </td>
-                  <td className="p-4">
-                    <Typography variant="small" color="blue-gray">
-                      {penghuni.No_Telepon}
-                    </Typography>
-                  </td>
-                  <td className="p-4">
-                    <Typography variant="small" color="blue-gray">
-                      {penghuni.Alamat}
-                    </Typography>
-                  </td>
-                  <td className="p-4 flex gap-2">
-                    <Tooltip content="Edit">
-                      <IconButton
-                        variant="text"
-                        color="blue"
-                        onClick={() => tanganiSunting(penghuni.id)}
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-semibold leading-none opacity-70"
                       >
-                        <PencilIcon className="h-5 w-5" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip content="Hapus">
-                      <IconButton
-                        variant="text"
-                        color="red"
-                        onClick={() =>
-                          tanganiHapus(penghuni.id, penghuni.Kamar_ID)
-                        }
-                      >
-                        <FaTrashAlt className="h-5 w-5" />
-                      </IconButton>
-                    </Tooltip>
-                  </td>
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {daftarPenghuni.map((penghuni, index) => (
+                  <tr
+                    key={`${penghuni.id}-${index}`}
+                    className="even:bg-blue-gray-50/50"
+                  >
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray">
+                        {(halaman - 1) * 5 + index + 1}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray">
+                        {penghuni.Nama}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray">
+                        {penghuni.Jenis_Kelamin}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray">
+                        {penghuni.No_Pintu}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray">
+                        {penghuni.No_Telepon}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography variant="small" color="blue-gray">
+                        {penghuni.Alamat}
+                      </Typography>
+                    </td>
+                    <td className="p-4 flex gap-2">
+                      <Tooltip content="Edit">
+                        <IconButton
+                          variant="text"
+                          color="blue"
+                          onClick={() => tanganiSunting(penghuni.id)}
+                        >
+                          <PencilIcon className="h-5 w-5" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip content="Hapus">
+                        <IconButton
+                          variant="text"
+                          color="red"
+                          onClick={() => tanganiHapus(penghuni.id)}
+                        >
+                          <FaTrashAlt className="h-5 w-5" />
+                        </IconButton>
+                      </Tooltip>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="font-normal"
+              >
+                Halaman {halaman} dari {Math.ceil(totalPenghuni / 5)}
+              </Typography>
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={ambilHalamanSebelumnya}
+                  variant="outlined"
+                  size="sm"
+                  disabled={sedangMemuatTampilkanPenghuni || halaman === 1}
+                >
+                  Sebelumnya
+                </Button>
+                <Button
+                  onClick={ambilHalamanSelanjutnya}
+                  variant="outlined"
+                  size="sm"
+                  disabled={
+                    sedangMemuatTampilkanPenghuni ||
+                    halaman === Math.ceil(totalPenghuni / 5)
+                  }
+                >
+                  Selanjutnya
+                </Button>
+              </div>
+            </CardFooter>
+          </div>
         )}
       </Card>
 
@@ -191,7 +229,6 @@ const KontenPenghuni = () => {
         suntingPenghuni={suntingPenghuni}
         sedangMemuatSuntingPenghuni={sedangMemuatSuntingPenghuni}
       />
-
       <ModalKonfirmasiHapusPenghuni
         terbuka={bukaModalHapusPenghuni}
         tertutup={setBukaModalHapusPenghuni}

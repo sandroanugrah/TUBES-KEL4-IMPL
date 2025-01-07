@@ -183,28 +183,34 @@ const Page = () => {
           )}
         </section>
 
-        <section className="bg-gray-800/50 mt-8 rounded-xl p-4 flex flex-col items-center z-10">
-          <h2 className="text-xl font-bold mb-4 text-[#f1c40f]">
+        <section className="bg-[#34495e] mt-8 rounded-xl p-6 shadow-lg flex flex-col items-center z-10">
+          <h2 className="text-2xl font-bold mb-6 text-[#f1c40f] tracking-wide">
             Informasi Kosan
           </h2>
-          <div className="text-sm text-center">
-            <p className="mb-2">
-              <span className="font-semibold text-[#f1c40f]">Alamat:</span> Jl.
-              Alizar No. 123, Jakarta Selatan
+          <div className="text-base text-center text-gray-200 space-y-4">
+            <p>
+              <span className="font-semibold text-[#f1c40f]">Alamat:</span>{" "}
+              RW01, Cibeber, Kec. Cimahi Sel., Kota Cimahi, Jawa Barat RT03
             </p>
-            <p className="mb-2">
-              <span className="font-semibold text-[#f1c40f]">Fasilitas:</span>{" "}
-              Wifi, Air Conditioner, Listrik 24 Jam, Tempat Parkir, Dapur
-              Bersama
-            </p>
-            <p className="mb-2">
-              <span className="font-semibold text-[#f1c40f]">Harga:</span> Mulai
-              dari Rp. 1.500.000/bulan
+            <div className="flex flex-col items-center">
+              <span className="font-semibold text-[#f1c40f] mb-2">
+                Fasilitas:
+              </span>
+              <ul className="list-disc text-sm text-gray-200 ml-4 space-y-1">
+                <li>Kamar mandi dalam</li>
+                <li>Wifi 24 Jam</li>
+                <li>Tempat parkir luas</li>
+                <li>Meja dan lemari</li>
+                <li>Air minum gratis</li>
+              </ul>
+            </div>
+            <p>
+              <span className="font-semibold text-[#f1c40f]">No Telepon:</span>{" "}
+              +62 853 6397 2317
             </p>
             <p>
               <span className="font-semibold text-[#f1c40f]">Kebijakan:</span>{" "}
-              Tidak diperbolehkan membawa hewan peliharaan, merokok hanya di
-              area luar
+              Tidak diperbolehkan membawa pasangan yang belum menikah
             </p>
           </div>
         </section>

@@ -7,6 +7,7 @@ import {
   IconButton,
   Tooltip,
   Button,
+  CardFooter,
 } from "@material-tailwind/react";
 // Pengait Hooks
 import useTampilkanPembayaran from "@/hooks/useTampilkanPembayaran";
@@ -24,8 +25,14 @@ const judul_tabel = [
 ];
 
 const KontenPembayaran = () => {
-  const { daftarPembayaran, sedangMemuatTampilkanPembayaran } =
-    useTampilkanPembayaran();
+  const {
+    totalPembayaran,
+    daftarPembayaran,
+    sedangMemuatTampilkanPembayaran,
+    halaman,
+    ambilHalamanSebelumnya,
+    ambilHalamanSelanjutnya,
+  } = useTampilkanPembayaran();
   const [bukaModalSuntingPembayaran, setBukaModalSuntingPembayaran] =
     useState(false);
   const [pembayaranYangTerpilih, setPembayaranYangTerpilih] = useState(null);
@@ -149,6 +156,32 @@ const KontenPembayaran = () => {
             )}
           </tbody>
         </table>
+        <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
+          <Typography variant="small" color="blue-gray" className="font-normal">
+            Halaman {halaman} dari {Math.ceil(totalPembayaran / 5)}
+          </Typography>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={ambilHalamanSebelumnya}
+              variant="outlined"
+              size="sm"
+              disabled={sedangMemuatTampilkanPembayaran || halaman === 1}
+            >
+              Sebelumnya
+            </Button>
+            <Button
+              onClick={ambilHalamanSelanjutnya}
+              variant="outlined"
+              size="sm"
+              disabled={
+                sedangMemuatTampilkanPembayaran ||
+                halaman === Math.ceil(totalPembayaran / 5)
+              }
+            >
+              Selanjutnya
+            </Button>
+          </div>
+        </CardFooter>
 
         <ModalSuntingPembayaran
           terbuka={bukaModalSuntingPembayaran}

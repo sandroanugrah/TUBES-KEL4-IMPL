@@ -1,16 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { toast } from "react-toastify";
 // PERPUSTAKAAN KAMI
 import { database } from "@/lib/firebaseConfig";
 
-const useTampilkanPembayaran = () => {
+const useTampilkanPembayaran = (batasHalaman = 5) => {
   const [sedangMemuatTampilkanPembayaran, setSedangMemuatTampilkanPembayaran] =
     useState(false);
   const [daftarPembayaran, setDaftarPembayaran] = useState([]);
   const [totalPembayaran, setTotalPembayaran] = useState(0);
+  const [halaman, setHalaman] = useState(1);
 
-  const ambilDaftarPembayaran = async () => {
+  const ambilDaftarPembayaran = useCallback(async () => {
     const referensiPembayaran = collection(database, "pembayaran");
     try {
       setSedangMemuatTampilkanPembayaran(true);
@@ -30,8 +31,16 @@ const useTampilkanPembayaran = () => {
 
       const pembayaranUrut = [...pembayaranBelumLunas, ...pembayaranLunas];
 
-      setDaftarPembayaran(pembayaranUrut);
-      setTotalPembayaran(pembayaran.length);
+      setTotalPembayaran(pembayaranUrut.length);
+
+      const startIndex = (halaman - 1) * batasHalaman;
+      const endIndex = startIndex + batasHalaman;
+      const pembayaranHalamanSaatIni = pembayaranUrut.slice(
+        startIndex,
+        endIndex
+      );
+
+      setDaftarPembayaran(pembayaranHalamanSaatIni);
     } catch (error) {
       toast.error(
         "Terjadi kesalahan saat mengambil daftar pembayaran: " + error.message
@@ -39,16 +48,32 @@ const useTampilkanPembayaran = () => {
     } finally {
       setSedangMemuatTampilkanPembayaran(false);
     }
-  };
+  }, [halaman, batasHalaman]);
 
   useEffect(() => {
     ambilDaftarPembayaran();
-  }, []);
+  }, [ambilDaftarPembayaran]);
+
+  const ambilHalamanSebelumnya = () => {
+    if (halaman > 1) {
+      setHalaman(halaman - 1);
+    }
+  };
+
+  const ambilHalamanSelanjutnya = () => {
+    const totalHalaman = Math.ceil(totalPembayaran / batasHalaman);
+    if (halaman < totalHalaman) {
+      setHalaman(halaman + 1);
+    }
+  };
 
   return {
     totalPembayaran,
     daftarPembayaran,
     sedangMemuatTampilkanPembayaran,
+    halaman,
+    ambilHalamanSebelumnya,
+    ambilHalamanSelanjutnya,
   };
 };
 

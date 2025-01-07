@@ -6,6 +6,7 @@ import {
   Typography,
   Button,
   CardBody,
+  CardFooter,
 } from "@material-tailwind/react";
 import { UserPlusIcon } from "@heroicons/react/24/outline";
 // Komponen
@@ -20,7 +21,14 @@ function KontenAdmin() {
   const [openModalTambah, setOpenModalTambah] = useState(false);
   const [bukaModalHapusAdmin, setBukaModalHapusAdmin] = useState(false);
   const [adminYangTerpilih, setAdminYangTerpilih] = useState(null);
-  const { daftarAdmin, sedangMemuatTampilkanAdmin } = useTampilkanAdmin();
+  const {
+    totalAdmin,
+    daftarAdmin,
+    sedangMemuatTampilkanAdmin,
+    halaman,
+    ambilHalamanSebelumnya,
+    ambilHalamanSelanjutnya,
+  } = useTampilkanAdmin();
   const { sedangMemuatHapusAdmin, hapusAdmin } = useHapusAdmin();
 
   const toggleModalTambah = () => setOpenModalTambah(!openModalTambah);
@@ -147,6 +155,32 @@ function KontenAdmin() {
           </table>
         )}
       </CardBody>
+      <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
+        <Typography variant="small" color="blue-gray" className="font-normal">
+          Halaman {halaman} dari {Math.ceil(totalAdmin / 5)}
+        </Typography>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={ambilHalamanSebelumnya}
+            variant="outlined"
+            size="sm"
+            disabled={sedangMemuatTampilkanAdmin || halaman === 1}
+          >
+            Sebelumnya
+          </Button>
+          <Button
+            onClick={ambilHalamanSelanjutnya}
+            variant="outlined"
+            size="sm"
+            disabled={
+              sedangMemuatTampilkanAdmin ||
+              halaman === Math.ceil(totalAdmin / 5)
+            }
+          >
+            Selanjutnya
+          </Button>
+        </div>
+      </CardFooter>
 
       <ModalTambahAdmin open={openModalTambah} setOpen={setOpenModalTambah} />
 

@@ -52,7 +52,7 @@ const Page = () => {
 
   return (
     <div
-      className="h-screen flex flex-col bg-[#2c2c2c] text-white relative"
+      className="h-screen flex flex-col text-white"
       style={{
         backgroundImage: `url(${gambarBackground.src})`,
         backgroundSize: "cover",
@@ -60,7 +60,11 @@ const Page = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <header className="flex flex-col items-center p-4 border-b border-[#8e44ad] bg-black/50">
+      <div
+        className="absolute inset-0 bg-black/30 backdrop-blur-md z-0"
+        aria-hidden="true"
+      />
+      <header className="flex flex-col items-center p-4 border-b border-[#8e44ad] bg-black/50 z-10">
         <p className="text-[#f1c40f] text-4xl font-extrabold mb-6 tracking-wider">
           Alizar Kost
         </p>
@@ -78,7 +82,7 @@ const Page = () => {
         </div>
       </header>
 
-      <main className="flex-1 p-4 bg-black/50 backdrop-blur-lg">
+      <main className="flex-1 p-4 bg-black/50 z-10">
         <section>
           <h2 className="text-xl font-bold mb-4 text-[#f1c40f]">
             Pilihan Kamar
@@ -144,7 +148,7 @@ const Page = () => {
                   </div>
                 ))}
               </div>
-              <CardFooter className="flex items-center justify-between border-t ">
+              <CardFooter className="flex items-center justify-between border-t z-10">
                 <Typography
                   variant="small"
                   color="blue-gray"
@@ -179,7 +183,7 @@ const Page = () => {
           )}
         </section>
 
-        <section className="bg-black/50 mt-8 rounded-xl p-4 flex flex-col items-center">
+        <section className="bg-gray-800/50 mt-8 rounded-xl p-4 flex flex-col items-center z-10">
           <h2 className="text-xl font-bold mb-4 text-[#f1c40f]">
             Informasi Kosan
           </h2>
@@ -210,10 +214,10 @@ const Page = () => {
         href={waUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-4 right-4 bg-[#25D366] px-6 py-4 rounded-full shadow-lg flex items-center justify-center text-white text-lg font-medium gap-3"
+        className="fixed bottom-4  z-10 right-4 bg-[#25D366] px-6 py-4 rounded-full shadow-lg flex items-center justify-center text-white text-lg font-medium gap-3"
       >
         <FaWhatsapp size={24} />
-        Hubungi Kami untuk Informasi Selengkapnya
+        Hubungi Kami
       </a>
     </div>
   );

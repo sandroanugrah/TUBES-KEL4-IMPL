@@ -1,12 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Button, Card, Typography, Input } from "@material-tailwind/react";
-import {
-  AtSymbolIcon,
-  EyeIcon,
-  EyeSlashIcon,
-  ArrowLeftCircleIcon,
-} from "@heroicons/react/24/solid";
+import { AtSymbolIcon, EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
@@ -19,8 +14,6 @@ import useMasukDenganEmailKataSandi from "@/hooks/useMasukDenganEmailKataSandi";
 
 export default function Masuk() {
   const [lihatKataSandi, setLihatKataSandi] = useState(false);
-  const [tampilkanCardLupaKataSandi, setTampilkanCardLupaKataSandi] =
-    useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { masukDenganEmail, sedangMemuat } = useMasukDenganEmailKataSandi();
@@ -51,12 +44,10 @@ export default function Masuk() {
 
         <div className="mt-4 text-center">
           <Typography variant="h3" className="font-mono">
-            {tampilkanCardLupaKataSandi ? "Lupa Kata Sandi" : "Masuk"}
+            Masuk
           </Typography>
           <Typography className="font-body text-gray-600">
-            {tampilkanCardLupaKataSandi
-              ? "Masukkan email Anda untuk reset kata sandi."
-              : "Masukkan email dan kata sandi untuk melanjutkan akses."}
+            Masukkan email dan kata sandi untuk melanjutkan akses.
           </Typography>
         </div>
 
@@ -73,66 +64,38 @@ export default function Masuk() {
             <AtSymbolIcon className="absolute right-3 top-2 h-6 w-6 text-gray-600" />
           </div>
 
-          {!tampilkanCardLupaKataSandi && (
-            <div className="relative mb-6">
-              <Input
-                label="Kata Sandi"
-                type={lihatKataSandi ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="focus:border-[#0F67B1]"
-                required
+          <div className="relative mb-6">
+            <Input
+              label="Kata Sandi"
+              type={lihatKataSandi ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="focus:border-[#0F67B1]"
+              required
+            />
+            {lihatKataSandi ? (
+              <EyeSlashIcon
+                className="absolute right-3 top-2 h-6 w-6 text-gray-700 cursor-pointer"
+                onClick={() => setLihatKataSandi(false)}
               />
-              {lihatKataSandi ? (
-                <EyeSlashIcon
-                  className="absolute right-3 top-2 h-6 w-6 text-gray-700 cursor-pointer"
-                  onClick={() => setLihatKataSandi(false)}
-                />
-              ) : (
-                <EyeIcon
-                  className="absolute right-3 top-2 h-6 w-6 text-gray-700 cursor-pointer"
-                  onClick={() => setLihatKataSandi(true)}
-                />
-              )}
-            </div>
-          )}
+            ) : (
+              <EyeIcon
+                className="absolute right-3 top-2 h-6 w-6 text-gray-700 cursor-pointer"
+                onClick={() => setLihatKataSandi(true)}
+              />
+            )}
+          </div>
 
           <div className="mt-6">
             <Button
               type="submit"
-              className="w-full bg-gray-700 text-white hover:scale-95 transition-all duration-200"
+              className="w-full mb-14 bg-gray-700 text-white hover:scale-95 transition-all duration-200"
               disabled={sedangMemuat}
             >
-              {sedangMemuat ? (
-                <Memuat />
-              ) : tampilkanCardLupaKataSandi ? (
-                "Kirim Tautan Reset"
-              ) : (
-                "Masuk"
-              )}
+              {sedangMemuat ? <Memuat /> : "Masuk"}
             </Button>
           </div>
         </form>
-
-        <div className="text-center my-6">
-          {!tampilkanCardLupaKataSandi && (
-            <Typography
-              className="text-gray-700 text-sm hover:underline cursor-pointer"
-              onClick={() => setTampilkanCardLupaKataSandi(true)}
-            >
-              Lupa Sandi?
-            </Typography>
-          )}
-        </div>
-
-        {tampilkanCardLupaKataSandi && (
-          <div className="flex justify-center mb-6">
-            <ArrowLeftCircleIcon
-              className="h-12 w-12 text-gray-700 cursor-pointer hover:scale-110 transition duration-200"
-              onClick={() => setTampilkanCardLupaKataSandi(false)}
-            />
-          </div>
-        )}
       </Card>
     </div>
   );
